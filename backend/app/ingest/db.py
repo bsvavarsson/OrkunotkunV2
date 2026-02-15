@@ -237,6 +237,103 @@ def upsert_hot_water_row(
     return True
 
 
+def upsert_ev_charger_row(connection: Connection, row: dict[str, Any], run_id: int) -> bool:
+        charger_id = str(row.get("ChargerId") or row.get("chargerId") or row.get("DeviceId") or "unknown")
+        session_id = str(row.get("Id") or row.get("id") or f"{charger_id}-{row.get('StartDateTime')}")
+        charger_name = row.get("DeviceName") or row.get("ChargerName")
+
+        started_at = _parse_timestamp(row.get("StartDateTime") or row.get("startDateTime"))
+        finished_raw = row.get("EndDateTime") or row.get("endDateTime")
+        finished_at = _parse_timestamp(finished_raw) if finished_raw else started_at
+
+        duration_seconds = int((finished_at - started_at).total_seconds()) if finished_at >= started_at else 0
+        energy_kwh = row.get("Energy") if row.get("Energy") is not None else row.get("TotalChargeKwh")
+
+        with connection.cursor() as cursor:
+                cursor.execute(
+                        """
+                        insert into energy.ev_charger_raw (
+                            source,
+                            charger_id,
+                            charger_name,
+                            session_id,
+                            started_at,
+                            finished_at,
+                            energy_kwh,
+                            duration_seconds,
+                            source_payload,
+                            ingestion_run_id
+                        ) values (
+                            'zaptec', %s, %s, %s, %s, %s, %s, %s, %s::jsonb, %s
+                        )
+                        on conflict (source, charger_id, session_id)
+                        do update set
+                            charger_name = excluded.charger_name,
+                            started_at = excluded.started_at,
+                            finished_at = excluded.finished_at,
+                            energy_kwh = excluded.energy_kwh,
+                            duration_seconds = excluded.duration_seconds,
+                            source_payload = excluded.source_payload,
+                            ingestion_run_id = excluded.ingestion_run_id
+                        """,
+                        (
+                                charger_id,
+                                charger_name,
+                                session_id,
+                                started_at,
+                                finished_at,
+                                energy_kwh,
+                                duration_seconds,
+                                json.dumps(row),
+                                run_id,
+                        ),
+                )
+        return True
+
+
+def upsert_weather_row(
+        connection: Connection,
+        measured_at: datetime,
+        temperature_c: float | int | None,
+        humidity_percent: float | int | None,
+        wind_speed_kmh: float | int | None,
+        source_payload: dict[str, Any],
+        run_id: int,
+) -> bool:
+        with connection.cursor() as cursor:
+                cursor.execute(
+                        """
+                        insert into energy.weather_raw (
+                            source,
+                            measured_at,
+                            temperature_c,
+                            humidity_percent,
+                            wind_speed_kmh,
+                            source_payload,
+                            ingestion_run_id
+                        ) values (
+                            'open_meteo', %s, %s, %s, %s, %s::jsonb, %s
+                        )
+                        on conflict (source, measured_at)
+                        do update set
+                            temperature_c = excluded.temperature_c,
+                            humidity_percent = excluded.humidity_percent,
+                            wind_speed_kmh = excluded.wind_speed_kmh,
+                            source_payload = excluded.source_payload,
+                            ingestion_run_id = excluded.ingestion_run_id
+                        """,
+                        (
+                                measured_at,
+                                temperature_c,
+                                humidity_percent,
+                                wind_speed_kmh,
+                                json.dumps(source_payload),
+                                run_id,
+                        ),
+                )
+        return True
+
+
 def _parse_timestamp(value: Any) -> datetime:
     if isinstance(value, datetime):
         return value if value.tzinfo else value.replace(tzinfo=UTC)
