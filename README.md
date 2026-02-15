@@ -39,19 +39,25 @@ Local-first home energy analysis app.
    uv sync
    ```
 
-3. Run provider integration smoke tests:
+3. Start backend + frontend together:
+
+   ```bash
+   ./scripts/start-dev.sh
+   ```
+
+4. Run provider integration smoke tests:
 
    ```bash
    .venv/bin/pytest -m integration -q
    ```
 
-4. Run ingestion backfill (example):
+5. Run ingestion backfill (example):
 
    ```bash
    .venv/bin/python -m app.ingest.run_backfill --from 2026-01-01 --to 2026-02-14
    ```
 
-5. Apply Supabase SQL migrations (local):
+6. Apply Supabase SQL migrations (local):
 
    Use your preferred local DB client against `127.0.0.1:54322` and run files in `infra/supabase/migrations` in order.
 

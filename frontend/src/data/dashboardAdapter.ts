@@ -125,20 +125,26 @@ function mapHealth(statusValue: string): SourceHealth {
   return 'error';
 }
 
+function formatWeatherTimestamp(day: string): string {
+  const date = new Date(`${day}T00:00:00Z`);
+  return new Intl.DateTimeFormat('is-IS', {
+    dateStyle: 'short',
+    timeStyle: 'short',
+    timeZone: 'Atlantic/Reykjavik',
+  }).format(date);
+}
+
 function buildKpis(currentPeriod: DashboardDailyPoint[], previousPeriod: DashboardDailyPoint[]): KpiCardData[] {
   const brutto = sumMetric(currentPeriod, 'bruttoKwh');
   const netto = sumMetric(currentPeriod, 'nettoKwh');
   const ev = sumMetric(currentPeriod, 'evKwh');
   const hotWater = sumMetric(currentPeriod, 'hotWaterUsage');
-  const weather =
-    currentPeriod.length === 0
-      ? 0
-      : Number(
-          (
-            currentPeriod.reduce((sum, point) => sum + point.avgTemperatureC, 0) /
-            currentPeriod.length
-          ).toFixed(1),
-        );
+  const latestWeatherPoint =
+    currentPeriod.length === 0 ? null : currentPeriod[currentPeriod.length - 1];
+  const weather = latestWeatherPoint ? Number(latestWeatherPoint.avgTemperatureC.toFixed(1)) : 0;
+  const weatherLabel = latestWeatherPoint
+    ? `Weather (${formatWeatherTimestamp(latestWeatherPoint.day)})`
+    : 'Weather';
 
   const prevBrutto = sumMetric(previousPeriod, 'bruttoKwh');
   const prevNetto = sumMetric(previousPeriod, 'nettoKwh');
@@ -156,7 +162,7 @@ function buildKpis(currentPeriod: DashboardDailyPoint[], previousPeriod: Dashboa
       unit: 'm³',
       deltaPercent: toDelta(hotWater, prevHotWater),
     },
-    { key: 'weather', label: 'Weather', value: weather, unit: '°C', deltaPercent: null },
+    { key: 'weather', label: weatherLabel, value: weather, unit: '°C', deltaPercent: null },
   ];
 }
 

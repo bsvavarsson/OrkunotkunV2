@@ -12,6 +12,15 @@ function getPoint(daysAgo: number): string {
   return formatDate(date);
 }
 
+function formatWeatherTimestamp(day: string): string {
+  const date = new Date(`${day}T00:00:00Z`);
+  return new Intl.DateTimeFormat('is-IS', {
+    dateStyle: 'short',
+    timeStyle: 'short',
+    timeZone: 'Atlantic/Reykjavik',
+  }).format(date);
+}
+
 const energySeries = Array.from({ length: 30 }, (_, index) => {
   const reverseIndex = 29 - index;
   const bruttoKwh = 72 + Math.sin(reverseIndex / 4) * 8 + (reverseIndex % 5);
@@ -34,8 +43,7 @@ function computePeriodSum(metric: 'bruttoKwh' | 'nettoKwh' | 'evKwh' | 'hotWater
   return Number(energySeries.reduce((sum, item) => sum + item[metric], 0).toFixed(2));
 }
 
-const weatherAverage =
-  energySeries.reduce((sum, item) => sum + item.avgTemperatureC, 0) / energySeries.length;
+const latestWeatherPoint = energySeries[energySeries.length - 1];
 
 export const mockDashboardData: DashboardData = {
   kpis: [
@@ -69,8 +77,8 @@ export const mockDashboardData: DashboardData = {
     },
     {
       key: 'weather',
-      label: 'Weather',
-      value: Number(weatherAverage.toFixed(1)),
+      label: `Weather (${formatWeatherTimestamp(latestWeatherPoint.day)})`,
+      value: Number(latestWeatherPoint.avgTemperatureC.toFixed(1)),
       unit: '°C',
       deltaPercent: null,
     },
