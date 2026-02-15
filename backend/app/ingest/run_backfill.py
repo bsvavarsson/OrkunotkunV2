@@ -28,6 +28,9 @@ from app.providers.zaptec import ZaptecClient
 from app.settings import load_provider_settings
 
 
+VEITUR_READING_HISTORY_LOOKBACK_DAYS = 180
+
+
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Backfill provider data into local energy tables")
     parser.add_argument("--from", dest="from_date", default=None, help="Start date (YYYY-MM-DD), default Jan 1 this year")
@@ -57,6 +60,83 @@ def _parse_datetime(value: Any) -> datetime:
     except ValueError:
         parsed = datetime.strptime(text, "%Y-%m-%d %H:%M:%S")
         return parsed.replace(tzinfo=UTC)
+
+
+def _to_float(value: Any) -> float | None:
+    if value is None:
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _to_non_negative_int(value: Any) -> int:
+    try:
+        return max(int(value or 0), 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def _normalize_veitur_history_rows(reading_rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], int]:
+    prepared_rows: list[dict[str, Any]] = []
+
+    for row in reading_rows:
+        measured_at = _parse_datetime(row.get("readingDate"))
+        prepared_rows.append(
+            {
+                "row": row,
+                "measured_at": measured_at,
+                "usage": _to_float(row.get("usage")),
+                "reading_value": _to_float(row.get("readingValue")),
+                "daily_estimation": _to_float(row.get("dailyEstimation")),
+                "interval_days": _to_non_negative_int(row.get("readingDays")),
+            }
+        )
+
+    prepared_rows.sort(key=lambda item: item["measured_at"])
+
+    normalized_rows: list[dict[str, Any]] = []
+    previous_with_reading_value: tuple[datetime, float] | None = None
+    derived_usage_rows = 0
+
+    for item in prepared_rows:
+        measured_at = item["measured_at"]
+        usage_value = item["usage"]
+        reading_value = item["reading_value"]
+        interval_days = item["interval_days"]
+
+        interval_start_at = measured_at - timedelta(days=interval_days)
+        interval_end_at = measured_at
+
+        if (usage_value is None or usage_value <= 0) and previous_with_reading_value and reading_value is not None:
+            previous_measured_at, previous_reading_value = previous_with_reading_value
+            usage_delta = reading_value - previous_reading_value
+            delta_days = (measured_at.date() - previous_measured_at.date()).days
+
+            if usage_delta > 0 and delta_days > 0:
+                usage_value = round(usage_delta, 5)
+                interval_days = delta_days
+                interval_start_at = previous_measured_at
+                derived_usage_rows += 1
+
+        normalized_rows.append(
+            {
+                "row": item["row"],
+                "measured_at": measured_at,
+                "period_usage_value": usage_value,
+                "interval_start_at": interval_start_at,
+                "interval_end_at": interval_end_at,
+                "interval_days": interval_days,
+                "daily_estimation": item["daily_estimation"],
+                "reading_value": reading_value,
+            }
+        )
+
+        if reading_value is not None:
+            previous_with_reading_value = (measured_at, reading_value)
+
+    return normalized_rows, derived_usage_rows
 
 
 async def _ingest_hsveitur(from_date: date, to_date: date, run_id: int) -> SourceWriteResult:
@@ -131,8 +211,10 @@ async def _ingest_veitur(from_date: date, to_date: date, run_id: int) -> SourceW
         permanent_number=settings.veitur_permanent_number,
     )
 
+    history_fetch_from = from_date - timedelta(days=VEITUR_READING_HISTORY_LOOKBACK_DAYS)
+
     try:
-        history_payload = await client.get_reading_history(date_from=from_date, date_to=to_date)
+        history_payload = await client.get_reading_history(date_from=history_fetch_from, date_to=to_date)
         reading_rows = history_payload.get("meterReading", [])
     except ProviderError as history_error:
         if str(history_error.category) != "empty":
@@ -148,23 +230,22 @@ async def _ingest_veitur(from_date: date, to_date: date, run_id: int) -> SourceW
     rows_written = 0
     with get_connection() as connection:
         if reading_rows:
-            for row in reading_rows:
-                if not isinstance(row, dict):
-                    continue
-                measured_at = _parse_datetime(row.get("readingDate"))
-                interval_days = int(row.get("readingDays") or 0)
-                interval_start_at = measured_at - timedelta(days=interval_days)
-                interval_end_at = measured_at
+            normalized_rows, derived_usage_rows = _normalize_veitur_history_rows(
+                [row for row in reading_rows if isinstance(row, dict)]
+            )
+
+            for item in normalized_rows:
+                row = item["row"]
                 upsert_hot_water_row(
                     connection,
                     permanent_number=settings.veitur_permanent_number,
-                    measured_at=measured_at,
-                    period_usage_value=row.get("usage"),
-                    interval_start_at=interval_start_at,
-                    interval_end_at=interval_end_at,
-                    interval_days=interval_days,
-                    daily_estimation=row.get("dailyEstimation"),
-                    reading_value=row.get("readingValue"),
+                    measured_at=item["measured_at"],
+                    period_usage_value=item["period_usage_value"],
+                    interval_start_at=item["interval_start_at"],
+                    interval_end_at=item["interval_end_at"],
+                    interval_days=item["interval_days"],
+                    daily_estimation=item["daily_estimation"],
+                    reading_value=item["reading_value"],
                     usage_unit=None,
                     data_status=0,
                     source_payload=row,
@@ -176,7 +257,12 @@ async def _ingest_veitur(from_date: date, to_date: date, run_id: int) -> SourceW
                 source_name="veitur",
                 status="success",
                 rows_written=rows_written,
-                details={"mode": "reading-history", "raw_rows": len(reading_rows)},
+                details={
+                    "mode": "reading-history",
+                    "raw_rows": len(reading_rows),
+                    "derived_usage_rows": derived_usage_rows,
+                    "fetch_from": history_fetch_from.isoformat(),
+                },
             )
 
         try:
