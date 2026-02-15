@@ -2,7 +2,7 @@
 
 Local-first home energy analysis app.
 
-## Current Scope (Phase A-D, partial)
+## Current Scope (Phase A-E, partial)
 
 - Phase A: workspace structure and repository guardrails
 - Phase B: endpoint connectivity harness for Veitur, HS Veitur, Zaptec, Open-Meteo
@@ -12,7 +12,7 @@ Local-first home energy analysis app.
 ## Repository Structure
 
 - `backend/` FastAPI backend + provider clients + tests
-- `frontend/` React frontend (scaffold only currently)
+- `frontend/` React frontend dashboard (v1 wireframe implementation)
 - `infra/supabase/` SQL migrations and schema assets
 - `docs/` implementation docs and redacted integration evidence
 
