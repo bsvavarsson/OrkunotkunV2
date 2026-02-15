@@ -5,6 +5,7 @@ description = "Provider connectivity and ingestion foundation for OrkunotkunV2"
 requires-python = ">=3.11"
 dependencies = [
   "httpx>=0.27.0",
+  "psycopg[binary]>=3.2.0",
   "python-dotenv>=1.0.1",
 ]
 
