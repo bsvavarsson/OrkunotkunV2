@@ -24,4 +24,9 @@ Frontend reads Supabase through:
 - `VITE_SUPABASE_URL`
 - `VITE_SUPABASE_ANON_KEY`
 
+It also accepts root `.env` fallbacks:
+
+- `SUPABASE_API_URL`
+- `SUPABASE_ANON_KEY`
+
 If not set, the app runs with built-in mock data.
