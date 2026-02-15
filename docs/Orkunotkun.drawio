@@ -1,0 +1,193 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.8" pages="2">
+  <diagram name="Screen" id="zdH7fPh71EnFpzb75ydd">
+    <mxGraphModel dx="1426" dy="682" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontFamily=Helvetica;fontSize=24;fontStyle=1;" value="Home Energy Consumption Dashboard" vertex="1">
+          <mxGeometry height="700" width="1000" x="20" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-2" parent="jdBFugWK_UAUuHLDJGT4-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cccccc;" value="" vertex="1">
+          <mxGeometry height="100" width="180" x="20" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-3" parent="jdBFugWK_UAUuHLDJGT4-2" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontFamily=Helvetica;fontSize=12;" value="Brutto Electricity Consumption" vertex="1">
+          <mxGeometry height="30" width="180" y="5" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-4" parent="jdBFugWK_UAUuHLDJGT4-2" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fontFamily=Helvetica;fontSize=24;fontStyle=1;" value="1234 kWh" vertex="1">
+          <mxGeometry height="60" width="180" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-5" parent="jdBFugWK_UAUuHLDJGT4-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cccccc;" value="" vertex="1">
+          <mxGeometry height="100" width="180" x="210" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-6" parent="jdBFugWK_UAUuHLDJGT4-5" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontFamily=Helvetica;fontSize=12;" value="Netto Energy Consumption" vertex="1">
+          <mxGeometry height="30" width="180" y="5" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-7" parent="jdBFugWK_UAUuHLDJGT4-5" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fontFamily=Helvetica;fontSize=24;fontStyle=1;" value="987 kWh" vertex="1">
+          <mxGeometry height="60" width="180" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-8" parent="jdBFugWK_UAUuHLDJGT4-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cccccc;" value="" vertex="1">
+          <mxGeometry height="100" width="180" x="400" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-9" parent="jdBFugWK_UAUuHLDJGT4-8" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontFamily=Helvetica;fontSize=12;" value="EV Consumption" vertex="1">
+          <mxGeometry height="30" width="180" y="5" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-10" parent="jdBFugWK_UAUuHLDJGT4-8" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fontFamily=Helvetica;fontSize=24;fontStyle=1;" value="247 kWh" vertex="1">
+          <mxGeometry height="60" width="180" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-11" parent="jdBFugWK_UAUuHLDJGT4-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cccccc;" value="" vertex="1">
+          <mxGeometry height="100" width="180" x="590" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-12" parent="jdBFugWK_UAUuHLDJGT4-11" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontFamily=Helvetica;fontSize=12;" value="Hot Water Consumption (Last Month)" vertex="1">
+          <mxGeometry height="30" width="180" y="5" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-13" parent="jdBFugWK_UAUuHLDJGT4-11" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fontFamily=Helvetica;fontSize=24;fontStyle=1;" value="150 m3" vertex="1">
+          <mxGeometry height="60" width="180" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-14" parent="jdBFugWK_UAUuHLDJGT4-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cccccc;" value="" vertex="1">
+          <mxGeometry height="100" width="180" x="780" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-15" parent="jdBFugWK_UAUuHLDJGT4-14" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontFamily=Helvetica;fontSize=12;" value="Current Weather" vertex="1">
+          <mxGeometry height="30" width="180" y="5" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-16" parent="jdBFugWK_UAUuHLDJGT4-14" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fontFamily=Helvetica;fontSize=20;fontStyle=1;" value="22°C, Sunny" vertex="1">
+          <mxGeometry height="60" width="180" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-17" parent="jdBFugWK_UAUuHLDJGT4-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cccccc;" value="" vertex="1">
+          <mxGeometry height="500" width="470" x="20" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-18" parent="jdBFugWK_UAUuHLDJGT4-17" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontFamily=Helvetica;fontSize=14;fontStyle=1;" value="Energy Consumption per Day (This Month) &amp; Avg. (Last 3 Months)" vertex="1">
+          <mxGeometry height="30" width="470" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-19" parent="jdBFugWK_UAUuHLDJGT4-17" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;dashed=1;fontFamily=Helvetica;fontSize=12;" value="&lt;p style=&quot;text-align:center;&quot;&gt;&lt;b&gt;Bar Chart:&lt;/b&gt; Daily Consumption (This Month)&lt;/p&gt;&lt;p style=&quot;text-align:center;&quot;&gt;&lt;b&gt;Line Chart:&lt;/b&gt; Avg. Daily Consumption (Last 3 Months)&lt;/p&gt;" vertex="1">
+          <mxGeometry height="430" width="430" x="20" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-20" parent="jdBFugWK_UAUuHLDJGT4-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cccccc;" value="" vertex="1">
+          <mxGeometry height="500" width="470" x="510" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-21" parent="jdBFugWK_UAUuHLDJGT4-20" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontFamily=Helvetica;fontSize=14;fontStyle=1;" value="Hot Water Consumption (Last 3 Months)" vertex="1">
+          <mxGeometry height="30" width="470" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="jdBFugWK_UAUuHLDJGT4-22" parent="jdBFugWK_UAUuHLDJGT4-20" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;dashed=1;fontFamily=Helvetica;fontSize=12;" value="&lt;p style=&quot;text-align:center;&quot;&gt;&lt;b&gt;Bar Chart:&lt;/b&gt; Hot Water Consumption (Last 3 Months)&lt;/p&gt;" vertex="1">
+          <mxGeometry height="430" width="430" x="20" y="50" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="BFTMENfUU4JEZPcR5qei" name="Architecture">
+    <mxGraphModel dx="1426" dy="682" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="lpef8VyTumnvTuu1-DQn-1" parent="1" style="shape=cloud;whiteSpace=wrap;html=1;" value="Electricity API" vertex="1">
+          <mxGeometry height="80" width="120" x="20" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-2" parent="1" style="shape=cloud;whiteSpace=wrap;html=1;" value="EV Charger API" vertex="1">
+          <mxGeometry height="80" width="120" x="20" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-3" parent="1" style="shape=cloud;whiteSpace=wrap;html=1;" value="Hot Water API" vertex="1">
+          <mxGeometry height="80" width="120" x="20" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-4" parent="1" style="shape=cloud;whiteSpace=wrap;html=1;" value="Weather API" vertex="1">
+          <mxGeometry height="80" width="120" x="20" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Integration Tool" vertex="1">
+          <mxGeometry height="80" width="150" x="270" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-6" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;strokeColor=#000000;fillColor=#e0e0e0;" value="Supabase Database" vertex="1">
+          <mxGeometry height="310" width="200" x="520" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-7" parent="lpef8VyTumnvTuu1-DQn-6" style="shape=table;html=1;whiteSpace=wrap;startSize=20;container=1;collapsible=0;" value="Electricity Table" vertex="1">
+          <mxGeometry height="70" width="200" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-8" parent="lpef8VyTumnvTuu1-DQn-6" style="shape=table;html=1;whiteSpace=wrap;startSize=20;container=1;collapsible=0;" value="EV Charger Table" vertex="1">
+          <mxGeometry height="70" width="200" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-9" parent="lpef8VyTumnvTuu1-DQn-6" style="shape=table;html=1;whiteSpace=wrap;startSize=20;container=1;collapsible=0;" value="Hot Water Table" vertex="1">
+          <mxGeometry height="70" width="200" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-10" parent="lpef8VyTumnvTuu1-DQn-6" style="shape=table;html=1;whiteSpace=wrap;startSize=20;container=1;collapsible=0;" value="Weather Table" vertex="1">
+          <mxGeometry height="70" width="200" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-11" parent="1" style="shape=display;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Dashboard" vertex="1">
+          <mxGeometry height="80" width="120" x="820" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-12" edge="1" parent="1" source="lpef8VyTumnvTuu1-DQn-1" style="endArrow=classic;html=1;rounded=0;" target="lpef8VyTumnvTuu1-DQn-5" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-13" edge="1" parent="1" source="lpef8VyTumnvTuu1-DQn-2" style="endArrow=classic;html=1;rounded=0;" target="lpef8VyTumnvTuu1-DQn-5" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-14" edge="1" parent="1" source="lpef8VyTumnvTuu1-DQn-3" style="endArrow=classic;html=1;rounded=0;" target="lpef8VyTumnvTuu1-DQn-5" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-15" edge="1" parent="1" source="lpef8VyTumnvTuu1-DQn-4" style="endArrow=classic;html=1;rounded=0;" target="lpef8VyTumnvTuu1-DQn-5" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-16" edge="1" parent="1" source="lpef8VyTumnvTuu1-DQn-5" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="lpef8VyTumnvTuu1-DQn-7" value="writes">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="470" y="210" />
+              <mxPoint x="470" y="85" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-17" edge="1" parent="1" source="lpef8VyTumnvTuu1-DQn-5" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="lpef8VyTumnvTuu1-DQn-8" value="writes">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="470" y="210" />
+              <mxPoint x="470" y="155" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-18" edge="1" parent="1" source="lpef8VyTumnvTuu1-DQn-5" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="lpef8VyTumnvTuu1-DQn-9" value="writes">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="470" y="210" />
+              <mxPoint x="470" y="225" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-19" edge="1" parent="1" source="lpef8VyTumnvTuu1-DQn-5" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="lpef8VyTumnvTuu1-DQn-10" value="writes">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="470" y="210" />
+              <mxPoint x="470" y="295" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-20" edge="1" parent="1" source="lpef8VyTumnvTuu1-DQn-7" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="lpef8VyTumnvTuu1-DQn-11" value="reads">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="770" y="85" />
+              <mxPoint x="770" y="210" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-21" edge="1" parent="1" source="lpef8VyTumnvTuu1-DQn-8" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="lpef8VyTumnvTuu1-DQn-11" value="reads">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="770" y="155" />
+              <mxPoint x="770" y="210" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-22" edge="1" parent="1" source="lpef8VyTumnvTuu1-DQn-9" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="lpef8VyTumnvTuu1-DQn-11" value="reads">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="770" y="225" />
+              <mxPoint x="770" y="210" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lpef8VyTumnvTuu1-DQn-23" edge="1" parent="1" source="lpef8VyTumnvTuu1-DQn-10" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="lpef8VyTumnvTuu1-DQn-11" value="reads">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="770" y="295" />
+              <mxPoint x="770" y="210" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

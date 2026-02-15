@@ -1,0 +1,32 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+.pnpm-store/
+
+# Python
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+
+# Coverage / build
+coverage/
+dist/
+build/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+
+# Local artifacts
+docs/integration-evidence/*.json
+docs/integration-evidence/*.log
+
+# Python packaging artifacts
+*.egg-info/
