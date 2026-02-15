@@ -43,6 +43,19 @@
 - **Authentication:** Public token + Private token + Customer ID
 - **Note:** This is a different company/API from Veitur.is (hot water)
 
+#### Confirmed request contract (from working Postman + code)
+- **Method:** `POST`
+- **Body:** none
+- **Query params (snake_case):**
+   - `public_token`
+   - `private_token`
+   - `customer_id`
+   - `datefrom` (example: `2026-02-01T00:00:00.000`)
+   - `dateto` (example: `2026-02-03T23:59:59.999`)
+   - `page_size` (example: `1000`)
+   - `page` (example: `1`)
+- **Pagination:** response contains `Info.NextPage`; must request additional pages until `NextPage` is `None`.
+
 
 #### Available Fields:
 | Field | Description |

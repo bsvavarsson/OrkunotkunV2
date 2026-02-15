@@ -11,11 +11,12 @@
 - Schema checks: `dataStatus`, `usageUnit`, and usage time/value arrays.
 
 ### HS Veitur (electricity)
-- Happy path: `GET Expectus/UsageData` with token pair + customer id.
+- Happy path: `POST Expectus/UsageData` with snake_case query params (`public_token`, `private_token`, `customer_id`, `datefrom`, `dateto`, `page_size`, `page`).
+- Pagination: iterate pages until `Info.NextPage` is `None`; do not stop at page 1.
 - Invalid credentials: invalid token pair should classify as `auth`/`schema` based on API behavior.
 - Empty response: empty list/object should classify as `empty`.
 - Date edge case: test with narrow and wider ranges.
-- Schema checks: expect entries with `date`, `delta_value`, `meter_id`, `unitcode`.
+- Schema checks: expect `Info` metadata and `UsageData` entries with `date`, `delta_value`, `meter_id`, `unitcode`.
 
 ### Zaptec (EV)
 - Happy path: obtain OAuth token, then call `/api/chargers` and `/api/chargehistory`.

@@ -1,29 +1,37 @@
 # OrkunotkunV2 — Handoff Plan (Local-First MVP)
 
-Last updated: 2026-02-14
+Last updated: 2026-02-15
 
-## 0) Progress snapshot (as of 2026-02-14)
+## 0) Progress snapshot (as of 2026-02-15)
 
 ### Completed in this session
 - ✅ Phase A completed (workspace structure + `.github` templates + guardrails).
 - ✅ Phase B completed (provider clients + integration smoke harness + failure classification + test matrix doc).
 - ✅ Phase C completed (Supabase migrations created and successfully applied to local Docker DB).
+- ✅ Phase D ingestion foundation completed (HS Veitur + Veitur + Zaptec + Open-Meteo backfill into raw tables).
+- ✅ HS Veitur contract aligned to real endpoint behavior (`POST` + snake_case query params + pagination).
+- ✅ Veitur interval semantics implemented in schema and daily expansion view.
 
 ### Validation results
-- Unit tests: `5 passed`.
-- Integration tests: `2 passed`, `3 skipped`.
-   - Veitur skipped due to no data in selected date range (`empty` classification captured).
-   - HS Veitur skipped due to endpoint contract mismatch / `404` (`schema` classification captured).
-   - Invalid-auth Zaptec test skipped unless `RUN_INVALID_AUTH_TESTS=1`.
+- Unit tests: passing.
+- Integration tests: `4 passed`, `1 skipped`.
+   - Optional invalid-auth Zaptec test is skipped unless `RUN_INVALID_AUTH_TESTS=1`.
 
 ### Database verification (local Supabase)
 - Created `energy` schema with tables:
    - `electricity_raw`, `ev_charger_raw`, `hot_water_raw`, `weather_raw`, `ingestion_runs`, `source_status`
 - Created views:
    - `electricity_daily`, `ev_daily`, `hot_water_daily`, `weather_daily`, `dashboard_daily`
+- Added migration `003_hot_water_interval_semantics.sql` with explicit interval columns for Veitur:
+   - `period_usage_value`, `interval_start_at`, `interval_end_at`, `interval_days`, `daily_estimation`, `reading_value`
+- Confirmed backfills populate:
+   - `electricity_raw` through 2026-02-14 (after HS pagination fix)
+   - `ev_charger_raw` populated from Zaptec
+   - `weather_raw` hourly rows from Open-Meteo
+   - `hot_water_raw` interval-based Veitur readings
 
 ### Next phase to execute
-- Start at **Phase D — Ingestion and API**.
+- Continue **Phase D** with API/query endpoints and scheduled automation.
 
 ## 1) Goal and current state
 
@@ -35,10 +43,11 @@ Build a local-first home energy analysis app, then prepare for deployment on Ver
   - `Orkunotkun.drawio` (screen + architecture concept)
   - `API-Endpoints.md` (provider endpoint notes)
   - `.env` (credentials and local configuration)
-- Not yet created:
-  - frontend/backend source code
-  - Supabase schema/migrations
-  - workspace scaffolding (`.github`, docs, tests, scripts)
+- Current implementation:
+   - backend provider clients + integration tests are in place
+   - ingestion backfill runner writes source data into Supabase raw tables
+   - schema migrations for raw tables + aggregates + Veitur interval semantics are in place
+   - frontend remains scaffold-only (Phase E pending)
 
 ## 2) Locked decisions (do not change unless user requests)
 
@@ -114,12 +123,12 @@ Build a local-first home energy analysis app, then prepare for deployment on Ver
 8. Add normalized/aggregate views or tables for dashboard reads.
 
 ### Phase D — Ingestion and API
-9. Build ingestion pipeline:
+9. Build ingestion pipeline (partially completed):
    - daily fetch
    - normalization
    - idempotent upserts
    - skip invalid rows + error logging
-10. Build backend API endpoints for:
+10. Build backend API endpoints for (pending):
    - KPI summary
    - 3 chart datasets
    - source status
@@ -162,8 +171,9 @@ Local MVP is done when all are true:
 
 ## 8) Known open items (must confirm before coding if unclear)
 
-- HS Veitur request contract still needs refinement (currently classified `schema` on smoke test).
-- Veitur date windows may need broader backfill range to avoid empty periods.
+- Decide strict range filtering for Zaptec ingestion (API may return rows outside requested window).
+- Add scheduled run orchestration (daily automation) and alerting policy.
+- Decide whether to ingest weather as hourly-only raw (current) or add persistent daily rollup table.
 - Exact invite/auth UX copy and role management depth (if expanded beyond shared-viewer model).
 
 ## 9) Resume protocol for next session
@@ -175,7 +185,13 @@ When session resumes, execute in this order:
 3. Confirm `.env` is present but never print values.
 4. Check Supabase Docker state.
 5. Continue from **Phase D** (ingestion + API implementation).
-6. Keep endpoint tests in CI/local checks while refining HS Veitur + Veitur data window behavior.
+6. Keep endpoint tests in CI/local checks.
+7. Run backfill manually when validating data:
+
+   ```bash
+   cd backend
+   .venv/bin/python -m app.ingest.run_backfill --from 2026-01-01 --to 2026-02-14
+   ```
 
 ## 10) Quick resume commands (to run manually tomorrow)
 
