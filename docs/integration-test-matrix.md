@@ -4,6 +4,7 @@
 
 ### Veitur (hot water)
 - Happy path: `GET /api/meter/usage-series` with valid bearer token and permanent number.
+- Fallback strategy: if `usage-series` returns empty, test `GET /api/meter/reading-history`; if still empty, validate `GET /api/meter/info` for active meter presence.
 - Invalid credentials: bad bearer token should classify as `auth`.
 - Empty response: `dataStatus=521` should classify as `empty`.
 - Date edge case: short range (last 7 days) and irregular interval payload acceptance.
