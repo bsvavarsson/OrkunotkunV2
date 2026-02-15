@@ -214,20 +214,17 @@ export async function getDashboardData(preset: DatePreset): Promise<DashboardDat
 
   const [dashboardResult, statusResult, runResult] = await Promise.all([
     supabase
-      .schema('energy')
       .from('dashboard_daily')
       .select('day,brutto_kwh,ev_kwh,netto_kwh,hot_water_usage,avg_temperature_c')
       .gte('day', range.rollingStart)
       .lte('day', range.end)
       .order('day', { ascending: true }),
     supabase
-      .schema('energy')
       .from('source_status')
       .select('source_name,checked_at,status,message')
       .order('checked_at', { ascending: false })
       .limit(100),
     supabase
-      .schema('energy')
       .from('ingestion_runs')
       .select('id,started_at,finished_at,status,source_count,success_count,failure_count,details')
       .order('started_at', { ascending: false })

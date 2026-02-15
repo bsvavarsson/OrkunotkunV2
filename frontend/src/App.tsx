@@ -58,6 +58,9 @@ function auditDuration(item: IngestionAuditItem): string {
 export default function App(): ReactElement {
   const [preset, setPreset] = useState<DatePreset>('thisMonth');
   const [expandedAuditId, setExpandedAuditId] = useState<number | null>(null);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncMessage, setSyncMessage] = useState<string | null>(null);
+  const [syncMessageType, setSyncMessageType] = useState<'success' | 'error' | null>(null);
   const [state, setState] = useState<{
     loading: boolean;
     error: string | null;
@@ -67,6 +70,14 @@ export default function App(): ReactElement {
     error: null,
     data: null,
   });
+
+  const backendUrl = (import.meta.env.VITE_BACKEND_URL || 'http://127.0.0.1:8000').replace(/\/$/, '');
+
+  const loadDashboardData = async (selectedPreset: DatePreset): Promise<void> => {
+    setState((prev) => ({ ...prev, loading: true, error: null }));
+    const data = await getDashboardData(selectedPreset);
+    setState({ loading: false, error: null, data });
+  };
 
   useEffect(() => {
     let active = true;
@@ -99,6 +110,36 @@ export default function App(): ReactElement {
     return `Síðast uppfært: ${formatDateTime(state.data.lastUpdatedAt)}`;
   }, [state.data]);
 
+  const handleSyncData = async (): Promise<void> => {
+    setIsSyncing(true);
+    setSyncMessage(null);
+    setSyncMessageType(null);
+
+    try {
+      const response = await fetch(`${backendUrl}/sync-data`, { method: 'POST' });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `Sync request failed (${response.status})`);
+      }
+
+      const payload = (await response.json()) as {
+        sources?: Array<{ rows_written?: number }>;
+      };
+
+      const totalRows = (payload.sources || []).reduce((sum, source) => sum + (source.rows_written || 0), 0);
+      setSyncMessageType('success');
+      setSyncMessage(`Sync completed. ${totalRows} rows processed.`);
+
+      await loadDashboardData(preset);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown sync error';
+      setSyncMessageType('error');
+      setSyncMessage(`Sync failed: ${message}`);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   return (
     <main className="dashboard-root">
       <header className="topbar">
@@ -108,6 +149,9 @@ export default function App(): ReactElement {
         </div>
         <div className="topbar-controls">
           {!hasSupabaseConfig ? <span className="pill">Demo gögn</span> : null}
+          <button type="button" className="sync-button" onClick={handleSyncData} disabled={isSyncing}>
+            {isSyncing ? 'Syncing…' : 'Sync data'}
+          </button>
           <label className="range-control">
             <span>Tímabil</span>
             <select value={preset} onChange={(event) => setPreset(event.target.value as DatePreset)}>
@@ -120,6 +164,8 @@ export default function App(): ReactElement {
           </label>
         </div>
       </header>
+
+      {syncMessage ? <div className={`sync-status ${syncMessageType || 'success'}`}>{syncMessage}</div> : null}
 
       {state.error ? (
         <div className="alert error">

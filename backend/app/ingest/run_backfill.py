@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+from collections.abc import Awaitable, Callable
 from datetime import date, datetime, timedelta, UTC
 from pathlib import Path
 from typing import Any
@@ -369,6 +370,61 @@ async def _ingest_weather(from_date: date, to_date: date, run_id: int) -> Source
     )
 
 
+SourceIngestFunction = Callable[[date, date, int], Awaitable[SourceWriteResult]]
+
+SOURCE_INGESTERS: dict[str, SourceIngestFunction] = {
+    "hsveitur": _ingest_hsveitur,
+    "veitur": _ingest_veitur,
+    "zaptec": _ingest_zaptec,
+    "weather": _ingest_weather,
+}
+
+
+def _get_latest_loaded_dates() -> dict[str, date | None]:
+        latest_dates: dict[str, date | None] = {source_name: None for source_name in SOURCE_INGESTERS}
+        with get_connection() as connection:
+                with connection.cursor() as cursor:
+                        cursor.execute(
+                                """
+                                select source_name, latest_day
+                                from (
+                                    select
+                                        'hsveitur'::text as source_name,
+                                        max((measured_at at time zone 'Atlantic/Reykjavik')::date) as latest_day
+                                    from energy.electricity_raw
+                                    where source = 'hsveitur'
+
+                                    union all
+
+                                    select
+                                        'veitur'::text as source_name,
+                                        max((coalesce(interval_end_at, measured_at) at time zone 'Atlantic/Reykjavik')::date) as latest_day
+                                    from energy.hot_water_raw
+                                    where source = 'veitur'
+
+                                    union all
+
+                                    select
+                                        'zaptec'::text as source_name,
+                                        max((coalesce(finished_at, started_at) at time zone 'Atlantic/Reykjavik')::date) as latest_day
+                                    from energy.ev_charger_raw
+                                    where source = 'zaptec'
+
+                                    union all
+
+                                    select
+                                        'weather'::text as source_name,
+                                        max((measured_at at time zone 'Atlantic/Reykjavik')::date) as latest_day
+                                    from energy.weather_raw
+                                    where source = 'open_meteo'
+                                ) latest
+                                """
+                        )
+                        for source_name, latest_day in cursor.fetchall():
+                                latest_dates[str(source_name)] = latest_day
+        return latest_dates
+
+
 async def run_backfill(from_date: date, to_date: date) -> list[SourceWriteResult]:
     with get_connection() as connection:
         run_id = create_ingestion_run(connection)
@@ -376,6 +432,45 @@ async def run_backfill(from_date: date, to_date: date) -> list[SourceWriteResult
     results: list[SourceWriteResult] = []
     for ingest_func in (_ingest_hsveitur, _ingest_veitur, _ingest_zaptec, _ingest_weather):
         result = await ingest_func(from_date, to_date, run_id)
+        results.append(result)
+        with get_connection() as connection:
+            write_source_status(connection, run_id, result)
+
+    with get_connection() as connection:
+        finalize_ingestion_run(connection, run_id, results)
+
+    return results
+
+
+async def run_incremental_sync(backtrack_days: int = 2, to_date: date | None = None) -> list[SourceWriteResult]:
+    sync_to_date = to_date or date.today()
+    default_from_date = date(sync_to_date.year, 1, 1)
+    latest_dates = _get_latest_loaded_dates()
+
+    with get_connection() as connection:
+        run_id = create_ingestion_run(connection)
+
+    results: list[SourceWriteResult] = []
+    for source_name, ingest_func in SOURCE_INGESTERS.items():
+        latest_loaded_date = latest_dates.get(source_name)
+        if latest_loaded_date:
+            source_from_date = max(default_from_date, latest_loaded_date - timedelta(days=backtrack_days))
+        else:
+            source_from_date = default_from_date
+
+        if source_from_date > sync_to_date:
+            source_from_date = sync_to_date
+
+        result = await ingest_func(source_from_date, sync_to_date, run_id)
+        result.details = {
+            **(result.details or {}),
+            "sync_window": {
+                "from": source_from_date.isoformat(),
+                "to": sync_to_date.isoformat(),
+                "latest_loaded_date": latest_loaded_date.isoformat() if latest_loaded_date else None,
+            },
+        }
+
         results.append(result)
         with get_connection() as connection:
             write_source_status(connection, run_id, result)
