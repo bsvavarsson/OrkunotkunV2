@@ -23,7 +23,7 @@ function formatDay(day: string): string {
 export function SimpleMetricChart({ points, metric, unit }: Props): ReactElement {
   return (
     <div className="chart-wrap" role="img" aria-label="Sögulegt línurit">
-      <ResponsiveContainer width="100%" height={240}>
+      <ResponsiveContainer width="100%" height={320}>
         <AreaChart data={points} margin={{ top: 8, right: 8, left: 0, bottom: 6 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="day" tickFormatter={formatDay} minTickGap={20} />

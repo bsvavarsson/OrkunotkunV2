@@ -11,6 +11,22 @@ log() {
   echo "[start-dev] $*"
 }
 
+print_manual_port_help() {
+  local port="$1"
+
+  cat <<EOF
+[start-dev] Manual fix steps for port $port:
+  1) Show what is listening:
+    lsof -nP -iTCP:$port -sTCP:LISTEN
+  2) Stop the process (replace <PID>):
+    kill <PID>
+  3) If needed, force stop:
+    kill -9 <PID>
+  4) Confirm port is free:
+    lsof -nP -iTCP:$port -sTCP:LISTEN || true
+EOF
+}
+
 wait_for_url() {
   local name="$1"
   local url="$2"
@@ -33,6 +49,21 @@ wait_for_url() {
   return 1
 }
 
+ensure_port_available() {
+  local port="$1"
+  local service_name="$2"
+  local listeners
+  listeners="$(lsof -nP -iTCP:"$port" -sTCP:LISTEN 2>/dev/null || true)"
+
+  if [[ -n "$listeners" ]]; then
+    log "$service_name cannot start because port $port is already in use"
+    echo "$listeners"
+    print_manual_port_help "$port"
+    log "After freeing the port, run ./scripts/start-dev.sh again"
+    exit 1
+  fi
+}
+
 log "Checking prerequisites"
 
 if [[ ! -x "$BACKEND_DIR/.venv/bin/python" ]]; then
@@ -46,6 +77,9 @@ if [[ ! -d "$FRONTEND_DIR/node_modules" ]]; then
   echo "Run: cd frontend && npm install"
   exit 1
 fi
+
+ensure_port_available 8000 "Backend"
+ensure_port_available 5173 "Frontend"
 
 BACKEND_PID=""
 FRONTEND_PID=""

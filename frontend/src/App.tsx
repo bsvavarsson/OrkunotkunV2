@@ -13,6 +13,16 @@ const presetOptions: Array<{ value: DatePreset; label: string }> = [
   { value: 'last3Months', label: 'Síðustu 3 mánuðir' },
 ];
 
+function chartRangeLabel(preset: DatePreset): string {
+  if (preset === 'thisMonth') {
+    return 'This Month';
+  }
+  if (preset === 'last30Days') {
+    return 'Last 30 Days';
+  }
+  return 'Last 3 Months';
+}
+
 function formatDateTime(value: string): string {
   return new Intl.DateTimeFormat('is-IS', {
     year: 'numeric',
@@ -109,6 +119,8 @@ export default function App(): ReactElement {
     }
     return `Síðast uppfært: ${formatDateTime(state.data.lastUpdatedAt)}`;
   }, [state.data]);
+
+  const selectedRangeLabel = useMemo(() => chartRangeLabel(preset), [preset]);
 
   const handleSyncData = async (): Promise<void> => {
     setIsSyncing(true);
@@ -207,11 +219,11 @@ export default function App(): ReactElement {
               <EnergyChart points={state.data.energySeries} />
             </Panel>
 
-            <Panel title="Hot Water (Last 3 Months)">
+            <Panel title={`Hot Water (${selectedRangeLabel})`}>
               <SimpleMetricChart points={state.data.hotWaterSeries} metric="hotWaterUsage" unit="m³" />
             </Panel>
 
-            <Panel title="EV Charging (Last 3 Months)">
+            <Panel title={`EV Charging (${selectedRangeLabel})`}>
               <SimpleMetricChart points={state.data.evSeries} metric="evKwh" unit="kWh" />
             </Panel>
           </div>
